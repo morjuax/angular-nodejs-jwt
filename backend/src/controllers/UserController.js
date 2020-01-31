@@ -1,6 +1,7 @@
 const controller = {};
 import User from "../models/User";
 import jwt from "jsonwebtoken";
+import {encrypt, decrypt} from '../helpers';
 
 controller.getUsers = (req, res) => {
   res.send("Hello World");
@@ -9,10 +10,11 @@ controller.getUsers = (req, res) => {
 controller.store = async (req, res) => {
   const { email, password } = req.body;
 
+
   try {
     const newUser = new User({
       email,
-      password
+      password: encrypt(password)
     });
     await newUser.save();
 
@@ -40,7 +42,7 @@ controller.signin = async (req, res) => {
         .send({ status: 0, message: "the email dosn't exists" });
     }
 
-    if (user.password !== password) {
+    if (decrypt(user.password) !== password) {
       return res.status(401).send({ status: 0, message: "Wrong password" });
     }
 
@@ -51,7 +53,6 @@ controller.signin = async (req, res) => {
       message: "Login success",
       data: token
     });
-
   } catch (e) {
     res
       .status(400)
