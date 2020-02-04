@@ -19,6 +19,7 @@ export class AuthService {
   }
 
   loggedIn(): boolean {
+    // equal to (localStorage.getItem('token') ? 1 : 0)
     return !!localStorage.getItem('token');
   }
 
@@ -28,6 +29,6 @@ export class AuthService {
 
   logout(){
     localStorage.removeItem('token');
-    this.router.navigate(['/signin'])
+    this.router.navigate(['/signin']);
   }
 }
